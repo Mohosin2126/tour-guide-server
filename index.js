@@ -32,6 +32,8 @@ async function run() {
 
     const dataCollection=client.db("tourDb").collection("data")
     const categoryCollection=client.db("tourDb").collection("category")
+    const guideCollection=client.db("tourDb").collection("guide")
+
 
 // data collection
 app.get("/data",async(req,res)=>{
@@ -45,14 +47,17 @@ app.get("/data",async(req,res)=>{
 
 // category collection 
 
-
-
-
 app.get("/category",async(req,res)=>{
     const result =await categoryCollection.find().toArray()
     res.send(result)
 })
 
+
+// guide collection
+app.get("/guide",async(req,res)=>{
+    const result =await guideCollection.find().toArray()
+    res.send(result)
+})
 
 
     // Send a ping to confirm a successful connection
