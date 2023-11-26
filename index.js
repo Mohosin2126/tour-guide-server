@@ -31,9 +31,9 @@ async function run() {
 
 
     const dataCollection=client.db("tourDb").collection("data")
+    const categoryCollection=client.db("tourDb").collection("category")
 
-
-
+// data collection
 app.get("/data",async(req,res)=>{
     const result =await dataCollection.find().toArray()
     res.send(result)
@@ -43,11 +43,15 @@ app.get("/data",async(req,res)=>{
 
 
 
+// category collection 
 
 
 
 
-
+app.get("/category",async(req,res)=>{
+    const result =await categoryCollection.find().toArray()
+    res.send(result)
+})
 
 
 
