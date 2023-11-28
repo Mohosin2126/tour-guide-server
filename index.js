@@ -3,7 +3,7 @@ const app=express()
 const cors=require('cors')
 const port=process.env.PORT||5000
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
 app.use(cors())
@@ -34,6 +34,7 @@ async function run() {
     const categoryCollection=client.db("tourDb").collection("category")
     const guideCollection=client.db("tourDb").collection("guide")
     const wishlistCollection =client.db("tourDb").collection("wishlist")
+    const bookingCollection =client.db("tourDb").collection("bookings")
 
 // data collection
 app.get("/data",async(req,res)=>{
@@ -66,10 +67,36 @@ app.post("/wishlist",async(req,res)=>{
   const result=await wishlistCollection.insertOne(cart)
   res.send(result)
 })
+app.get("/wishlist",async(req,res)=>{
+  const email=req.query.email
+  const query={email: email}
+  const result=await wishlistCollection.find(query).toArray()
+  res.send(result)
+})
+
+app.delete("/wishlist/:id",async(req,res)=>{
+  const id=req.params.id
+  const query={_id: new ObjectId(id)}
+  const result=await wishlistCollection.deleteOne(query)
+  res.send(result)
+})
 
 
 
+// bookings collection
+app.post("/bookings",async(req,res)=>{
+  const booking=req.body
+  const result=await bookingCollection.insertOne(booking)
+  res.send(result)
+})
 
+
+app.get("/bookings",async(req,res)=>{
+  const email=req.query.email
+  const query={email: email}
+  const result=await bookingCollection.find(query).toArray()
+  res.send(result)
+})
 
 
     // Send a ping to confirm a successful connection
