@@ -35,6 +35,9 @@ async function run() {
     const guideCollection=client.db("tourDb").collection("guide")
     const wishlistCollection =client.db("tourDb").collection("wishlist")
     const bookingCollection =client.db("tourDb").collection("bookings")
+   const userCollection=client.db("tourDb").collection("users")
+
+
 
 // data collection
 app.get("/data",async(req,res)=>{
@@ -59,6 +62,26 @@ app.get("/guide",async(req,res)=>{
     const result =await guideCollection.find().toArray()
     res.send(result)
 })
+
+// users api
+app.post("/users",async(req,res)=>{
+  const user=req.body 
+  // insert email if user doesn't exists
+  //i can do this many ways (email unique ,upsert,simple checking )
+const query={email:user.email}
+const existingUser=await userCollection.findOne(query)
+if (existingUser){
+  return res.send({message:"user already exist",insertedId:null})
+}
+ 
+  const result=await userCollection.insertOne(user)
+  res.send(result)
+})
+
+
+
+
+
 
 
 // wishlist collection
