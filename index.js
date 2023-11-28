@@ -33,7 +33,7 @@ async function run() {
     const dataCollection=client.db("tourDb").collection("data")
     const categoryCollection=client.db("tourDb").collection("category")
     const guideCollection=client.db("tourDb").collection("guide")
-
+    const wishlistCollection =client.db("tourDb").collection("wishlist")
 
 // data collection
 app.get("/data",async(req,res)=>{
