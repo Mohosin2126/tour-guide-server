@@ -60,6 +60,18 @@ app.get("/guide",async(req,res)=>{
 })
 
 
+// wishlist collection
+app.post("/wishlist",async(req,res)=>{
+  const cart =req.body
+  const result=await wishlistCollection.insertOne(cart)
+  res.send(result)
+})
+
+
+
+
+
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
