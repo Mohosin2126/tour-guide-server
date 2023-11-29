@@ -64,10 +64,16 @@ app.get("/guide",async(req,res)=>{
 })
 
 // users api
+
+app.get("/users",async(req,res)=>{
+  const result=await userCollection.find().toArray()
+  res.send(result)
+})
+
+
+
 app.post("/users",async(req,res)=>{
   const user=req.body 
-  // insert email if user doesn't exists
-  //i can do this many ways (email unique ,upsert,simple checking )
 const query={email:user.email}
 const existingUser=await userCollection.findOne(query)
 if (existingUser){
@@ -78,8 +84,18 @@ if (existingUser){
   res.send(result)
 })
 
-
-
+// make admin api 
+ app.patch('/users/admin/:id',async(req,res)=>{
+  const id=req.params.id 
+  const filter ={_id: new ObjectId(id)}
+  const updatedDoc={
+    $set:{
+      role:"admin"
+    }
+  }
+  const result =await userCollection.updateOne(filter,updatedDoc)
+  res.send(result)
+ })
 
 
 
