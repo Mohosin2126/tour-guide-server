@@ -3,15 +3,12 @@ const app=express()
 const cors=require('cors')
 const port=process.env.PORT||5000
 require('dotenv').config()
-var jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
 app.use(cors())
 app.use(express.json())
-
-
-
 
 
 
@@ -39,8 +36,31 @@ async function run() {
    const userCollection=client.db("tourDb").collection("users")
    const storyCollection=client.db("tourDb").collection("story")
 
+// jwt related api
+app.post("/jwt",async(req,res)=>{
+  const user=req.body
+  const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:"1h"})
+  res.send({token})
+})
 
+// middleware 
+const verifyToken = (req, res, next) => {
+  console.log("inside verify token", req.headers.authorization);
 
+  if (!req.headers.authorization) {
+    return res.status(401).send({ message: "Forbidden Access" });
+  }
+
+  const token = req.headers.authorization.split(' ')[1];
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(401).send({ message: "Forbidden Access" });
+    }
+    req.decoded = decoded;
+    next();
+  });
+};
 
 
 // data collection
@@ -69,7 +89,7 @@ app.get("/guide",async(req,res)=>{
 
 
 // users api
-app.get("/users",async(req,res)=>{
+app.get("/users",verifyToken, async(req,res)=>{
   const result=await userCollection.find().toArray()
   res.send(result)
 })
