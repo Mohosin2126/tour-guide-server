@@ -119,6 +119,25 @@ if (existingUser){
   res.send(result)
  })
 
+// admmin api 
+app.get("/users/admin/:email",verifyToken,async(req,res)=>{
+  const email=req.params.email
+  if(email !==req.decoded.email){
+    return res.status(403).send({message:"unathorize access"})
+  }
+  const query={email:email}
+  const user=await userCollection.findOne(query)
+  let admin=false 
+  if(user){
+    admin=user?.role == "admin"
+  }
+  res.send({admin})
+  })
+  
+
+
+
+
 
 // make guide api
  app.patch('/users/guide/:id',async(req,res)=>{
@@ -132,6 +151,27 @@ if (existingUser){
   const result =await userCollection.updateOne(filter,updatedDoc)
   res.send(result)
  })
+
+// guide api 
+app.get("/users/guide/:email",verifyToken,async(req,res)=>{
+  const email=req.params.email
+  if(email !==req.decoded.email){
+    return res.status(403).send({message:"unathorize access"})
+  }
+  const query={email:email}
+  const user=await userCollection.findOne(query)
+  let guide=false 
+  if(user){
+    guide=user?.role == "guide"
+  }
+  res.send({guide})
+  })
+  
+
+
+
+
+
 
 
 
