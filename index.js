@@ -43,7 +43,8 @@ app.post("/jwt",async(req,res)=>{
   res.send({token})
 })
 
-// middleware 
+
+// middleware for jwt 
 const verifyToken = (req, res, next) => {
   console.log("inside verify token", req.headers.authorization);
 
@@ -61,6 +62,33 @@ const verifyToken = (req, res, next) => {
     next();
   });
 };
+
+
+// middle ware verify admin 
+const verifyAdmin = async (req, res, next) => {
+  const email = req.decoded.email;
+  const query = { email: email };
+  const user = await userCollection.findOne(query);
+  const isAdmin = user?.role === 'admin';
+  if (!isAdmin) {
+    return res.status(403).send({ message: 'forbidden access' });
+  }
+  next();
+}
+
+// middle ware verify guide 
+
+const verifyGuide = async (req, res, next) => {
+  const email = req.decoded.email;
+  const query = { email: email };
+  const user = await userCollection.findOne(query);
+  const isGuide = user?.role === 'guide';
+  if (!isGuide) {
+    return res.status(403).send({ message: 'forbidden access' });
+  }
+  next();
+}
+
 
 
 // data collection
@@ -118,6 +146,7 @@ if (existingUser){
   const result =await userCollection.updateOne(filter,updatedDoc)
   res.send(result)
  })
+
 
 // admmin api 
 app.get("/users/admin/:email",verifyToken,async(req,res)=>{
