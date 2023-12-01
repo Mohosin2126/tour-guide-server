@@ -3,6 +3,7 @@ const app=express()
 const cors=require('cors')
 const port=process.env.PORT||5000
 require('dotenv').config()
+var jwt = require('jsonwebtoken');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 // middleware
@@ -36,6 +37,9 @@ async function run() {
     const wishlistCollection =client.db("tourDb").collection("wishlist")
     const bookingCollection =client.db("tourDb").collection("bookings")
    const userCollection=client.db("tourDb").collection("users")
+   const storyCollection=client.db("tourDb").collection("story")
+
+
 
 
 
@@ -63,14 +67,12 @@ app.get("/guide",async(req,res)=>{
     res.send(result)
 })
 
-// users api
 
+// users api
 app.get("/users",async(req,res)=>{
   const result=await userCollection.find().toArray()
   res.send(result)
 })
-
-
 
 app.post("/users",async(req,res)=>{
   const user=req.body 
@@ -134,7 +136,6 @@ app.delete("/wishlist/:id",async(req,res)=>{
 })
 
 
-
 // bookings collection
 app.post("/bookings",async(req,res)=>{
   const booking=req.body
@@ -151,6 +152,13 @@ app.get("/bookings",async(req,res)=>{
 })
 
 
+
+// tourist story section 
+app.get("/story",async(reqm,res)=>{
+  const result=await storyCollection.find().toArray()
+   res.send(result)
+})
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -160,15 +168,6 @@ app.get("/bookings",async(req,res)=>{
   }
 }
 run().catch(console.dir);
-
-
-
-
-
-
-
-
-
 
 
 
