@@ -241,7 +241,7 @@ app.get("/guidebookings",async(req,res)=>{
 
 
 // handle accept api 
-app.patch('/guidebookings/:id',async(req,res)=>{
+app.patch('/guidebookings/accept/:id',async(req,res)=>{
   const id=req.params.id 
   const filter ={_id: new ObjectId(id)}
   const updatedDoc={
@@ -253,8 +253,8 @@ app.patch('/guidebookings/:id',async(req,res)=>{
   res.send(result)
  })
 
-// handle accept api 
-app.patch('/guidebookings/:id',async(req,res)=>{
+// handle reject api 
+app.patch('/guidebookings/reject/:id',async(req,res)=>{
   const id=req.params.id 
   const filter ={_id: new ObjectId(id)}
   const updatedDoc={
@@ -265,6 +265,15 @@ app.patch('/guidebookings/:id',async(req,res)=>{
   const result =await bookingCollection.updateOne(filter,updatedDoc)
   res.send(result)
  })
+// cancel api 
+ app.delete("/guidebookings/:id",async(req,res)=>{
+  const id=req.params.id
+  const query={_id: new ObjectId(id)}
+  const result=await bookingCollection.deleteOne(query)
+  res.send(result)
+})
+
+
 
 
 // tourist story section 
