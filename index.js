@@ -35,6 +35,7 @@ async function run() {
     const bookingCollection =client.db("tourDb").collection("bookings")
    const userCollection=client.db("tourDb").collection("users")
    const storyCollection=client.db("tourDb").collection("story")
+   const commentCollection=client.db("tourDb").collection("comment")
 
  // jwt related api
  app.post("/jwt", async (req, res) => {
@@ -114,12 +115,12 @@ app.get("/users",verifyToken, async(req,res)=>{
   const result=await userCollection.find().toArray()
   res.send(result)
 })
-app.get("/users",async(req,res)=>{
-  const email=req.query.email
-  const query={email: email}
-  const result=await userCollection.find(query).toArray()
-  res.send(result)
-})
+// app.get("/users/:email",async(req,res)=>{
+//   const email=req.query.email
+//   const query={email: email}
+//   const result=await userCollection.find(query).toArray()
+//   res.send(result)
+// })
 
 app.post("/users",async(req,res)=>{
   const user=req.body 
@@ -287,6 +288,17 @@ app.get("/story",async(req,res)=>{
   const result=await storyCollection.find().toArray()
    res.send(result)
 })
+
+// comment post api 
+app.post("/comment",async(req,res)=>{
+  const comment =req.body
+  const result=await commentCollection.insertOne(comment)
+  res.send(result)
+})
+
+
+
+
 
 
     // Send a ping to confirm a successful connection
