@@ -91,7 +91,7 @@ app.get("/data",async(req,res)=>{
     res.send(result)
 })
 
-app.post("/data",async(req,res)=>{
+app.post("/data",verifyAdmin,verifyToken,async(req,res)=>{
   const cart =req.body
   const result=await dataCollection.insertOne(cart)
   res.send(result)
@@ -112,7 +112,7 @@ app.get("/guide",async(req,res)=>{
     const result =await guideCollection.find().toArray()
     res.send(result)
 })
-app.post("/guide",async(req,res)=>{
+app.post("/guide",verifyAdmin,verifyToken,async(req,res)=>{
   const cart =req.body
   const result=await guideCollection.insertOne(cart)
   res.send(result)
@@ -123,14 +123,14 @@ app.get("/users",verifyToken, async(req,res)=>{
   const result=await userCollection.find().toArray()
   res.send(result)
 })
-app.get("/users",async(req,res)=>{
+app.get("/users",verifyAdmin,async(req,res)=>{
   const email=req.query.email
   const query={email: email}
   const result=await userCollection.find(query).toArray()
   res.send(result)
 })
 
-app.post("/users",async(req,res)=>{
+app.post("/users",verifyToken,async(req,res)=>{
   const user=req.body 
 const query={email:user.email}
 const existingUser=await userCollection.findOne(query)
@@ -143,7 +143,7 @@ if (existingUser){
 })
 
 // make admin api 
- app.patch('/users/admin/:id',async(req,res)=>{
+ app.patch('/users/admin/:id',verifyAdmin,verifyToken,async(req,res)=>{
   const id=req.params.id 
   const filter ={_id: new ObjectId(id)}
   const updatedDoc={
@@ -177,7 +177,7 @@ app.get("/users/admin/:email",verifyToken,async(req,res)=>{
 
 
 // make guide api
- app.patch('/users/guide/:id',async(req,res)=>{
+ app.patch('/users/guide/:id',verifyAdmin,verifyToken,async(req,res)=>{
   const id=req.params.id 
   const filter ={_id: new ObjectId(id)}
   const updatedDoc={
