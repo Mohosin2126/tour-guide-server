@@ -91,7 +91,11 @@ app.get("/data",async(req,res)=>{
     res.send(result)
 })
 
-
+app.post("/data",async(req,res)=>{
+  const cart =req.body
+  const result=await dataCollection.insertOne(cart)
+  res.send(result)
+})
 
 
 
