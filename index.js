@@ -25,7 +25,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
 
     const dataCollection=client.db("tourDb").collection("data")
@@ -130,7 +130,7 @@ app.get("/users",verifyAdmin,async(req,res)=>{
   res.send(result)
 })
 
-app.post("/users",verifyToken,async(req,res)=>{
+app.post("/users",async(req,res)=>{
   const user=req.body 
 const query={email:user.email}
 const existingUser=await userCollection.findOne(query)
@@ -177,7 +177,7 @@ app.get("/users/admin/:email",verifyToken,async(req,res)=>{
 
 
 // make guide api
- app.patch('/users/guide/:id',verifyAdmin,verifyToken,async(req,res)=>{
+ app.patch('/users/guide/:id',verifyToken,async(req,res)=>{
   const id=req.params.id 
   const filter ={_id: new ObjectId(id)}
   const updatedDoc={
@@ -313,8 +313,8 @@ app.get("/comments",async(req,res)=>{
 
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    // await client.db("admin").command({ ping: 1 });
+    // console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // Ensures that the client will close when you finish/error
     // await client.close();
